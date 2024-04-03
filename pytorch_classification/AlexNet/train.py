@@ -85,8 +85,8 @@ def train():
         running_loss = 0.0
         train_bar = tqdm(train_loader, file=sys.stdout)
         for images, labels in train_bar:
-            # images = images.to(device)
-            # labels = labels.to(device)
+            images = images.to(device)
+            labels = labels.to(device)
             optimizer.zero_grad()
             outputs = net(images)
             loss = loss_fn(outputs, labels)
@@ -101,7 +101,7 @@ def train():
             val_bar = tqdm(validate_loader, file=sys.stdout)
             for val_data in val_bar:
                 val_images, val_labels = val_data
-                # val_images, val_labels = val_images.to(device), val_labels.to(device)
+                val_images, val_labels = val_images.to(device), val_labels.to(device)
                 outputs = net(val_images)
                 pre = torch.max(outputs, dim=1)[1]
                 acc += torch.eq(pre, val_labels).sum().item()
