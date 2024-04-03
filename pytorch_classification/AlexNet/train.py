@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch.optim as optim
 from tqdm import tqdm
-import intel_npu_acceleration_library
 
 from model import AlexNet
 
@@ -74,8 +73,7 @@ def train():
     print(device)
     train_loader, validate_loader, train_num, val_num = load_dataset()
     net = AlexNet(num_classes=5, init_weights=True)
-    # net.to(device)
-    net = intel_npu_acceleration_library.compile(net, torch.float32, training=True)
+    net.to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=0.0001)
     epochs = 500

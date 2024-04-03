@@ -63,14 +63,12 @@ def main():
     net = vgg(model_name=model_name, num_classes=5, init_weights=True)
     net.to(device)
     summary(net)
-    exit()
     
     loss_function = nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=0.0001)
 
     epochs = 30
     best_acc = 0.0
-    save_path = './{}Net.pth'.format(model_name)
     train_steps = len(train_loader)
     for epoch in range(epochs):
         # train
@@ -108,7 +106,15 @@ def main():
               (epoch + 1, running_loss / train_steps, val_accurate))
 
         if val_accurate > best_acc:
+            if best_acc != 0.0:
+                file_path = './{}Net_{:.3f}.pth'.format(model_name, best_acc)
+                try:
+                    os.remove(file_path)
+                    print(f"文件 {file_path} 已成功删除")
+                except OSError as e:
+                    print(f"删除文件 {file_path} 时出错：{e}")
             best_acc = val_accurate
+            save_path = './{}Net_{:.3f}.pth'.format(model_name, best_acc)
             torch.save(net.state_dict(), save_path)
 
     print('Finished Training')
