@@ -127,30 +127,30 @@ class ResNet(nn.Module):
             x = self.fc(x)
         return x
 
-    def _make_layer(self, block, channel, block_num, stride=1):
+    def _make_layer(self, block, out_channel, block_num, stride=1):
         downsample = None
-        if stride != 1 or self.in_channel != channel * block.expansion:
+        if stride != 1 or self.in_channel != out_channel * block.expansion:
             downsample = nn.Sequential(
-                nn.Conv2d(self.in_channel, channel * block.expansion,
+                nn.Conv2d(self.in_channel, out_channel * block.expansion,
                           kernel_size=1, stride=stride, bias=False),
-                nn.BatchNorm2d(channel * block.expansion)
+                nn.BatchNorm2d(out_channel * block.expansion)
             )
 
         layers = []
-        # 残差网络块
+        # 残差块入口
         layers.append(block(self.in_channel,
-                            channel,
+                            out_channel,
                             downsample=downsample,
                             stride=stride,
                             groups=self.groups,
                             width_per_group=self.width_per_group
                             ))
-        # 主干网络
-        self.in_channel = channel * block.expansion
+        # 堆叠残差块
+        self.in_channel = out_channel * block.expansion
         for _ in range(1, block_num):
             layers.append(block(
                 self.in_channel,
-                channel,
+                out_channel,
                 groups=self.groups,
                 width_per_group=self.width_per_group
             ))
