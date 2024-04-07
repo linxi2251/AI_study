@@ -1,6 +1,8 @@
 from torch import nn
 import torch
 
+import torchvision.models.mobilenetv2
+
 
 class ConvBNReLU(nn.Sequential):
     def __init__(self, in_channel, out_channel, kernel_size=3, stride=1, groups=1):
