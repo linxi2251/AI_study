@@ -8,7 +8,7 @@ from torchvision import transforms, datasets
 import torch.optim as optim
 from tqdm import tqdm
 
-from model import MobileNetV2
+from model_v2 import MobileNetV2
 
 
 def main():
